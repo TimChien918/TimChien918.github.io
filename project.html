@@ -1,0 +1,608 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><meta http-equiv='Access-Control-Allow-Headers' content='Origin, X-Requested-With, Content-Type, Accept'><meta http-equiv='Access-Control-Allow-Methods' content='GET,POST,PUT,DELETE,OPTIONS'><meta http-equiv='Access-Control-Allow-Origin' content='*'><meta http-equiv='Access-Control-Allow-Credentials' content='true'><script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/marked.min.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/gameelements.js'></script><link rel='stylesheet' href='https://fustyles.github.io/webduino/SpBlocklyJS/css/icon_custom.css' /><script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands_video.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/spreadsheetsql.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/loader.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/TextToSpeech_20220729/texttospeech.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/line_20220729/line.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/gemini_20240209/gemini.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/audioRecord_20250405/audioRecord.js'></script></head><body>
+<script>
+const delay = (seconds) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, seconds * 1000);
+    });
+};
+const main = async () => {
+    var _E5_9B_9E_E7_AD_94, _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F, _E5_95_8F_E9_A1_8C, _E8_A9_A6_E7_AE_97_E8_A1_A8_E7_B6_B2_E5_9D_80, _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F, GeminiKey, _E8_AA_9E_E9_9F_B3Prompt, _E7_B6_B2_E5_9D_80, _E6_89_8B_E6_8E_8C, _E5_AF_AC_E5_BA_A6, _E4_B8_AD_E9_86_ABPrompt, _E7_BF_BB_E8_AD_AFPrompt, i, _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B, _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB, _E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B;
+
+    // 描述此函式...
+    function _E8_AE_8A_E6_95_B8() {
+        _E5_9B_9E_E7_AD_94 = '回答';
+        _E5_95_8F_E9_A1_8C = '問題';
+        _E8_A9_A6_E7_AE_97_E8_A1_A8_E7_B6_B2_E5_9D_80 = 'https://docs.google.com/spreadsheets/d/12DBfaxVzqMqpCxfaMV47QzgJupS7SZ9YtYLWGExvUh4/edit?usp=sharing';
+        _E7_B6_B2_E5_9D_80 = 'https://cloudtcm.com/shu/list/414/0';
+        _E6_89_8B_E6_8E_8C = '';
+        _E5_AF_AC_E5_BA_A6 = 500;
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = 0;
+        _E4_B8_AD_E9_86_ABPrompt = ['你是具有中醫診斷和治療能力的專業中醫師，請你不要引用你內建的中醫知識。且請把(雲端中醫https://cloudtcm.com/shu/list/414/0)網頁內容作先備知識。患者將描述症狀，一步一步慢慢思考，請依據刺灸新法、針灸科學，並且專業診斷，針對患者的疾病，給予針灸治療方案。請確保回應包含中醫針灸部位，提供手掌2個對應症狀的穴位來紓解病痛，請說30字以內。準備好後請告訴我', '你回來的穴位中，一定要有這些穴的其中一個', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB].join('');
+        _E7_BF_BB_E8_AD_AFPrompt = ['1.Please use / to separate the three languages. This is necessary. Please remember that even if two of the three languages are the same, you still have to separate them.', '2. Please help me translate, but please strictly follow the sentence structure I specified. The sentence structure is: The language I used when asking you questions (please modify the language name according to the language I used in the conversation. Please say the name directly, do not use the language I used in the conversation, and do not repeat what I said) : Your answer (please use the language I used when asking the question)/Traditional Chinese: Your answer is translated into Chinese,/English: Your answer is translated into English', 'Here is an example. If your answer is: 你好, you need to reply, Traditional Chinese: 你好/Traditional Chinese:你好/English: Hello', 'Let me give you another example. If you want to say: Hello, you should reply, English: Hello/ Traditional Chinese:你好/English: Hello', '3.Please note that even if I use Chinese or English, you still need to translate', '4.You don\'t need to translate what I say', '5.When using the separator, please do not squeeze two languages together and translate them twice.', '6.To avoid automatic segmentation errors, please do not use “/".in places other than where segmentation is required.', '7.Please respond strictly according to the format I gave you.', '8.Please do not simplify the English translation'].join('');
+        _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = false;
+        _E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B = false;
+        GeminiKey = 'AIzaSyDPoZ-I7Py54rgtmN4X6_AUaTowJgvia5M';
+        _E8_AA_9E_E9_9F_B3Prompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.\\n', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
+        _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB = [
+            [
+                ['陽池', '陽池穴'],
+                ['少澤', '少澤穴'],
+                ['落枕', '落枕穴'],
+                ['合谷', '合谷穴'],
+                ['少衝', '少衝穴'],
+                ['商陽', '商陽穴'],
+                ['陽谿', '陽谿穴'],
+                ['中渚', '中渚穴'],
+                ['無', '無']
+            ],
+            [
+                ['魚際', '魚際穴'],
+                ['內關', '內關穴'],
+                ['太淵', '太淵穴'],
+                ['中衝', '中衝穴'],
+                ['列缺', '列缺穴'],
+                ['前谷', '前谷穴'],
+                ['神門', '神門穴'],
+                ['三間', '三間穴'],
+                ['二間', '二間穴'],
+                ['后溪', '后溪穴'],
+                ['勞宮', '勞宮穴'],
+                ['無', '無']
+            ]
+        ];
+    }
+
+    // 描述此函式...
+    async function _E9_80_81_E5_87_BA_E5_B0_8D_E8_A9_B1() {
+        div_set('', "innerHTML", ([fontText(3, '#cc0000', 'Arial', (textarea_get('', "value"))), '<br>', '<br>', div_get('', "innerHTML")].join('')));
+        _E5_95_8F_E9_A1_8C = (textarea_get('', "value"));
+        await gemini_chat_run((textarea_get('', "value")));
+        textarea_set('', "value", '');
+    }
+
+    // 描述此函式...
+    async function _E8_BE_A8_E8_AD_98() {
+        async function textarea__keydown(event) {
+            if (event.keyCode == 13) {
+                _E9_80_81_E5_87_BA_E5_B0_8D_E8_A9_B1();
+                await delay(0.1);
+                textarea_set('', "value", '');
+            }
+        };
+        document.getElementById('gametextarea_' + '').addEventListener("keydown", textarea__keydown, true);
+        async function textarea__focus(event) {
+            element_select("gametextarea_");
+        };
+        document.getElementById('gametextarea_' + '').addEventListener("focus", textarea__focus, true);
+        async function gemini_chat_response(gemini_chat_data) {
+            _E5_9B_9E_E7_AD_94 = (gemini_chat_response_br(gemini_chat_data, ''));
+            _E5_9B_9E_E7_AD_94 = (gemini_chat_response_br(gemini_chat_data, '')).split('/');
+            div_set('', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (_E5_9B_9E_E7_AD_94[0])), '<br>', '<br>', div_get('', "innerHTML")].join('')));
+            await ttsSpeak(("Eddy (英文（美國）)"), (_E5_9B_9E_E7_AD_94[0]));
+            spreadsheet_insert("insertlast", String("gmt_datetime") + "|" + String(_E5_95_8F_E9_A1_8C) + "|" + String(_E5_9B_9E_E7_AD_94[0]) + "|" + String(_E5_9B_9E_E7_AD_94[1]) + "|" + String(_E5_9B_9E_E7_AD_94[2]), 0, 0, "", _E8_A9_A6_E7_AE_97_E8_A1_A8_E7_B6_B2_E5_9D_80, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
+            i = setDatetime(0, 0, 0, 0, 0, 0);
+            linebot_push_message('jHELtzp2oiHQK5sdSciRYvNi2FIwZiCbVhjRoxvhuzXVZCHGx6PtY6BqGJS6OyYL7AE42vqyzPikesqbLb+mE2kj06X5YofYiSAM9YAA0+1Phs2pSKrlhtDVOTc479rvHLz6lW9MPdPLIxyAk31bTQdB04t89/1O/w1cDnyilFU=', 'U119e52abd339210576e354879f5ce368', line_url_escape("bot", "text", ([getDatetime(i, "datetime"), '<br>', 'Question:' + String(_E5_95_8F_E9_A1_8C), '<br>', '<br>', _E5_9B_9E_E7_AD_94[0], '<br>', '<br>', _E5_9B_9E_E7_AD_94[1], '<br>', '<br>', _E5_9B_9E_E7_AD_94[2]].join('')), '', '', ''));
+            select_set('手掌', "value", '無');
+            div_set('c', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (_E5_9B_9E_E7_AD_94[1])), '<br>', '<br>', div_get('c', "innerHTML")].join('')));
+            div_set('e', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (_E5_9B_9E_E7_AD_94[2])), '<br>', '<br>', div_get('e', "innerHTML")].join('')));
+            _E6_89_8B_E6_8E_8C = _E5_9B_9E_E7_AD_94[1];
+
+        }
+        window.gemini_chat_response = gemini_chat_response;
+        async function gamebutton_replay_onclick(event) {
+            gemini_chat_clear();
+            div_set('', "innerHTML", '');
+            textarea_set('', "value", '');
+        };
+        document.getElementById("gamebutton_replay").addEventListener("click", gamebutton_replay_onclick, true);
+        async function gamebutton_save_onclick(event) {
+            gemini_chat_content_file("save");
+        };
+        document.getElementById("gamebutton_save").addEventListener("click", gamebutton_save_onclick, true);
+        async function gamebutton_upload_file_onclick(event) {
+            div_set('', "innerHTML", '');
+            gemini_chat_content_file("open");
+        };
+        document.getElementById("gamebutton_upload_file").addEventListener("click", gamebutton_upload_file_onclick, true);
+        async function gamebutton_volume_off_onclick(event) {
+            if (_E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B) {
+                ttsSwitch(0);
+                button_set('volume_off', "value", 'Turn on the speaker');
+                ttsState("cancel");
+            } else {
+                ttsSwitch(1);
+                button_set('volume_off', "value", 'Turn off the speaker');
+            }
+            _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = !_E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B;
+        };
+        document.getElementById("gamebutton_volume_off").addEventListener("click", gamebutton_volume_off_onclick, true);
+        async function gamebutton_mic_off_onclick(event) {
+            if (_E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B) {
+                button_set('mic_off', "value", 'Click me to record');
+                button_set('mic_off', "color", '#3366ff');
+                await recording_stopRecordingGeminiSTT();
+                await delay(1);
+            } else {
+                button_set('mic_off', "value", 'Recording...');
+                button_set('mic_off', "color", '#ff0000');
+                await recording_startRecording();
+            }
+            _E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B = !_E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B;
+        };
+        document.getElementById("gamebutton_mic_off").addEventListener("click", gamebutton_mic_off_onclick, true);
+        async function gamebutton_wechat_onclick(event) {
+            _E9_80_81_E5_87_BA_E5_B0_8D_E8_A9_B1();
+        };
+        document.getElementById("gamebutton_wechat").addEventListener("click", gamebutton_wechat_onclick, true);
+    }
+
+    // 描述此函式...
+    function _E5_89_8D_E8_B0_B7() {
+        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "17", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", ((hands_position(0, "17", "y")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('前谷' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E9_AD_9A_E9_9A_9B() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "3", "x")), (hands_position(0, "3", "y")), (hands_position(0, "2", "x")), (hands_position(0, "2", "y")))) / 2;
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((((hands_position(0, "2", "x")) + (hands_position(0, "1", "x"))) / 2 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", (((hands_position(0, "2", "y")) + (hands_position(0, "1", "y"))) / 2 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('魚際' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_85_A7_E9_97_9C() {
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "0", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", (((hands_position(0, "0", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('內關' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E9_99_BD_E8_B0_BF() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "2", "x")), (hands_position(0, "2", "y")), (hands_position(0, "1", "x")), (hands_position(0, "1", "y")))) / 2;
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "1", "x")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F)));
+        image_set('手背', "top", ((hands_position(0, "1", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('陽谿' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_8B_9E_E5_AE_AE() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "9", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", ((hands_position(0, "5", "y")) + ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2) / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('勞宮' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E7_A5_9E_E9_96_80() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_position(0, "17", "x")) - (hands_position(0, "0", "x")));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "17", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F)));
+        image_set('手掌', "top", ((hands_position(0, "1", "y")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('神門' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E8_90_BD_E6_9E_95() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + (((hands_position(0, "9", "x")) + (hands_position(0, "5", "x"))) / 2 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "9", "y")) + ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6 - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2) / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('落枕' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_A4_AA_E6_B7_B5() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "1", "x")), (hands_position(0, "1", "y")), (hands_position(0, "0", "x")), (hands_position(0, "0", "y")))) / 2;
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + (((hands_position(0, "1", "x")) + (hands_position(0, "0", "x"))) / 2 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", ((hands_position(0, "0", "y")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('太淵' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E4_B8_89_E9_96_93() {
+        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "7", "x")), (hands_position(0, "7", "y")), (hands_position(0, "6", "x")), (hands_position(0, "6", "y"))));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + (hands_position(0, "5", "x")) + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 10));
+        image_set('手掌', "top", (((hands_position(0, "5", "y")) + (hands_position(0, "6", "y"))) / 2 - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('三間' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E4_B8_AD_E8_A1_9D() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs(hands_distance((hands_position(0, "12", "x")), (hands_position(0, "12", "y")), (hands_position(0, "11", "x")), (hands_position(0, "11", "y"))));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "12", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", ((hands_position(0, "12", "y")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('中衝' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+    }
+
+    // 描述此函式...
+    function _E5_95_86_E9_99_BD() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "8", "x")), (hands_position(0, "8", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "8", "x")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 1.2)));
+        image_set('手背', "top", ((hands_position(0, "8", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('商陽' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_88_97_E7_BC_BA() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "0", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", (((hands_position(0, "0", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('列缺' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_90_8E_E6_BA_AA() {
+        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + ((hands_position(0, "17", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手掌', "top", (((hands_position(0, "17", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('后溪' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_90_88_E8_B0_B7() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = Math.abs((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "5", "x")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "5", "y")) + ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2) / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('合谷' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E9_99_BD_E6_B1_A0() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "1", "x")), (hands_position(0, "1", "y")))) / 2;
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "0", "x")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "0", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('陽池' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E4_BA_8C_E9_96_93() {
+        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+        _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手掌', "height", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "width", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手掌', "left", (400 + (hands_position(0, "6", "x")) + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 3));
+        image_set('手掌', "top", ((hands_position(0, "6", "y")) - _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手掌', "fontsize", _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('二間' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (_E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E4_B8_AD_E6_B8_9A() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "17", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('中渚' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_B0_91_E8_A1_9D() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "18", "x")), (hands_position(0, "18", "y"))));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "19", "x")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "19", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('少衝' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+    // 描述此函式...
+    function _E5_B0_91_E6_BE_A4() {
+        image_set('手背', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+        _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "20", "x")), (hands_position(0, "20", "y"))));
+        image_set('手背', "height", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "width", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        image_set('手背', "left", (400 + ((hands_position(0, "20", "x")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+        image_set('手背', "top", ((hands_position(0, "20", "y")) - _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2));
+        span_set('手背', "fontsize", _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('少澤' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (_E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F + _E6_89_8B_E8_83_8C_E5_A4_A7_E5_B0_8F / 2)));
+    }
+
+
+    _E8_AE_8A_E6_95_B8();
+    spreadsheet_insert("insertlast", String('時間') + "|" + String('問題') + "|" + String('原文') + "|" + String('翻譯成繁體中文') + "|" + String('翻譯成英文'), 0, 0, "", _E8_A9_A6_E7_AE_97_E8_A1_A8_E7_B6_B2_E5_9D_80, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
+    recording_GeminiSTT_initial(0, GeminiKey, "gemini-2.0-flash", _E8_AA_9E_E9_9F_B3Prompt);
+    audioGeminiSTT = async function(geminiResult) {
+        textarea_set('', "value", (geminiResult));
+
+    };
+    head_add_viewport(1, 1, 2, "no");
+    include_file("css", "", 'https://fustyles.github.io/webduino/GameElements_20190131/test_scroll.css');
+    button_create('replay', 132, 35, 0, 0, 1, null, 'Reset Conversation', 12, 999, true);
+    button_create('save', 132, 35, 0, 35, 1, null, 'Save Conversation', 12, 999, true);
+    button_create('upload_file', 132, 35, 132, 0, 1, null, 'Loading Conversation', 12, 999, true);
+    button_create('volume_off', 132, 35, 132, 35, 1, null, 'Turn on the speaker', 12, 999, true);
+    button_create('mic_off', 132, 35, 264, 0, 1, null, 'Click me to record', 12, 999, true);
+    button_create('wechat', 132, 35, 264, 35, 1, null, 'Send conversation', 12, 999, true);
+    textarea_create('', 0, 75, 47, 3, '請輸入對話', 1, 999, true);
+    ttsSetProperty(1, 1, 1, "en-GB");
+    ttsSwitch(0);
+    div_create('', 395, 400, 0, 140, "solid", 1, '#000000', '#ffffff', '#000000', 20, 1, '', 999, true);
+    div_create('c', 195, 400, 0, 550, "solid", 1, '#000000', '#ffffff', '#000000', 10, 1, '', 999, true);
+    div_create('e', 195, 400, 200, 550, "solid", 1, '#000000', '#ffffff', '#000000', 10, 1, '', 999, true);
+    div_set('', "class", 'container');
+    gemini_chat_initial(GeminiKey, "gemini-2.0-flash", 1000, 1.0, ([_E4_B8_AD_E9_86_ABPrompt, 'And you will translate your answer as follows', _E7_BF_BB_E8_AD_AFPrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB, '並且記住你是一個有問必答的超級中醫'].join('')));
+    await delay(2);
+    _E8_BE_A8_E8_AD_98();
+    select_create('手背', 300, 50, 885, 560, '#ffffff', '#000000', 20, 1, [
+        ['陽池', '陽池穴'],
+        ['少澤', '少澤穴'],
+        ['落枕', '落枕穴'],
+        ['合谷', '合谷穴'],
+        ['少衝', '少衝穴'],
+        ['商陽', '商陽穴'],
+        ['陽谿', '陽谿穴'],
+        ['中渚', '中渚穴'],
+        ['無', '無']
+    ], '', 999, true);
+    select_create('手掌', 300, 50, 450, 530, '#ffffff', '#000000', 20, 1, [
+        ['魚際', '魚際穴'],
+        ['內關', '內關穴'],
+        ['太淵', '太淵穴'],
+        ['中衝', '中衝穴'],
+        ['列缺', '列缺穴'],
+        ['前谷', '前谷穴'],
+        ['神門', '神門穴'],
+        ['三間', '三間穴'],
+        ['二間', '二間穴'],
+        ['后溪', '后溪穴'],
+        ['勞宮', '勞宮穴'],
+        ['無', '無']
+    ], '', 999, true);
+    span_create('手掌標示', 500, 450, 25, (['Please select a', '<br>', 'palm acupoint'].join('')), 999);
+    span_create('手背標示', 900, 450, 25, (['Please select the ', '<br>', 'acupuncture point on', '<br>', 'the back of your hand'].join('')), 999);
+    span_create('手掌', 500, 600, 50, '', 1000);
+    span_create('手背', 500, 600, 50, '', 1000);
+    span_set('手掌', "display", false);
+    span_set('手背', "display", false);
+    hands_video("block", "1", "1", "1");
+    hands_startvideo_media(_E5_AF_AC_E5_BA_A6, 400, "front", 0);
+    hands_video_position(400, 0);
+    image_create('手掌', 'https://i.postimg.cc/4dpGy4Rj/costume1.png', 10, 10, 0, 0, 1000, false);
+    image_create('手背', 'https://i.postimg.cc/4dpGy4Rj/costume1.png', 10, 10, 0, 0, 1000, false);
+    image_create('手掌圖示', 'https://i.postimg.cc/zGGD8dk8/page-0001.png', _E5_AF_AC_E5_BA_A6, 400, 400, 0, 999, true);
+    hands_recognitionFinish = async function() {
+        hands_state(0);
+        async function gameselect_手背_onchange(event) {
+            _E6_89_8B_E6_8E_8C = '';
+        };
+        document.getElementById("gameselect_手背").addEventListener("change", gameselect_手背_onchange, true);
+        async function gameselect_手掌_onchange(event) {
+            _E6_89_8B_E6_8E_8C = '';
+        };
+        document.getElementById("gameselect_手掌").addEventListener("change", gameselect_手掌_onchange, true);
+        if ((_E5_AF_AC_E5_BA_A6 + 400) - (hands_position(0, "1", "x")) <= (_E5_AF_AC_E5_BA_A6 + 400) - (hands_position(0, "17", "x"))) {
+            image_set('手掌圖示', "url", 'https://i.postimg.cc/zGGD8dk8/page-0001.png');
+            if ((select_get('手掌', "selectedValue")) == '無' && !_E6_89_8B_E6_8E_8C.length) {
+                image_set('手掌', "display", false);
+                span_set('手掌', "display", false);
+            } else if ((select_get('手掌', "selectedValue")) == '魚際' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('魚際'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E9_AD_9A_E9_9A_9B();
+            } else if ((select_get('手掌', "selectedValue")) == '內關' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('內關'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E5_85_A7_E9_97_9C();
+            } else if ((select_get('手掌', "selectedValue")) == '太淵' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('太淵'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E5_A4_AA_E6_B7_B5();
+            } else if ((select_get('手掌', "selectedValue")) == '中衝' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('中衝'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E4_B8_AD_E8_A1_9D();
+            } else if ((select_get('手掌', "selectedValue")) == '列缺' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('列缺'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E5_88_97_E7_BC_BA();
+            } else if ((select_get('手掌', "selectedValue")) == '前谷' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('前谷'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E5_89_8D_E8_B0_B7();
+            } else if ((select_get('手掌', "selectedValue")) == '神門' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('神門'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E7_A5_9E_E9_96_80();
+            } else if ((select_get('手掌', "selectedValue")) == '三間' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('三間'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E4_B8_89_E9_96_93();
+            } else if ((select_get('手掌', "selectedValue")) == '勞宮' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('勞宮'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                _E5_8B_9E_E5_AE_AE();
+            } else if ((select_get('手掌', "selectedValue")) == '后溪' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('后溪'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                _E5_90_8E_E6_BA_AA();
+            } else if ((select_get('手掌', "selectedValue")) == '二間' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('二間'.toLowerCase()) != -1)) {
+                image_set('手掌', "display", true);
+                // 未完成
+                _E4_BA_8C_E9_96_93();
+            } else {
+                image_set('手掌', "display", false);
+                span_set('手掌', "display", false);
+            }
+        } else {
+            image_set('手掌', "display", false);
+            span_set('手掌', "display", false);
+        }
+        if (_E5_AF_AC_E5_BA_A6 - (hands_position(0, "1", "x")) >= _E5_AF_AC_E5_BA_A6 - (hands_position(0, "17", "x"))) {
+            image_set('手掌圖示', "url", 'https://i.postimg.cc/V6SCgMtj/20240325154306761-page-0001.png');
+            if ((select_get('手背', "selectedValue")) == '無' && !_E6_89_8B_E6_8E_8C.length) {
+                image_set('手背', "display", false);
+                span_set('手背', "display", false);
+            } else if ((select_get('手背', "selectedValue")) == '落枕' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('落枕'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                // 未完成
+                _E8_90_BD_E6_9E_95();
+            } else if ((select_get('手背', "selectedValue")) == '合谷' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('合谷'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                // 未完成
+                _E5_90_88_E8_B0_B7();
+            } else if ((select_get('手背', "selectedValue")) == '少衝' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('少衝'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                // 未完成
+                _E5_B0_91_E8_A1_9D();
+            } else if ((select_get('手背', "selectedValue")) == '商陽' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('商陽'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                // 未完成
+                _E5_95_86_E9_99_BD();
+            } else if ((select_get('手背', "selectedValue")) == '中渚' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('中渚'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                _E4_B8_AD_E6_B8_9A();
+            } else if ((select_get('手背', "selectedValue")) == '陽池' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('陽池'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                _E9_99_BD_E6_B1_A0();
+            } else if ((select_get('手背', "selectedValue")) == '少澤' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('少澤'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                _E5_B0_91_E6_BE_A4();
+            } else if ((select_get('手背', "selectedValue")) == '陽谿' || (_E6_89_8B_E6_8E_8C.toLowerCase().indexOf('陽谿'.toLowerCase()) != -1)) {
+                image_set('手背', "display", true);
+                // 未完成
+                _E9_99_BD_E8_B0_BF();
+            } else {
+                image_set('手背', "display", false);
+                span_set('手背', "display", false);
+            }
+        } else {
+            image_set('手背', "display", false);
+            span_set('手背', "display", false);
+        }
+
+        hands_state(1);
+    };
+    hands_unrecognitionFinish = async function() {
+        hands_state(0);
+        image_set('手背', "display", false);
+        image_set('手掌', "display", false);
+        span_set('手背', "display", false);
+        span_set('手掌', "display", false);
+
+        hands_state(1);
+    };
+};
+main();
+</script>
+</body></html>
