@@ -78,7 +78,7 @@ const main = async () => {
             _E5_9B_9E_E7_AD_94 = (gemini_chat_response_br(gemini_chat_data, ''));
             _E5_9B_9E_E7_AD_94 = (gemini_chat_response_br(gemini_chat_data, '')).split('/');
             div_set('', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (_E5_9B_9E_E7_AD_94[0])), '<br>', '<br>', div_get('', "innerHTML")].join('')));
-            await ttsSpeak(("Eddy (英文（美國）)"), (_E5_9B_9E_E7_AD_94[0]));
+            await ttsSpeak(("Eddy (英文（英國）)"), (_E5_9B_9E_E7_AD_94[0]));
             spreadsheet_insert("insertlast", String("gmt_datetime") + "|" + String(_E5_95_8F_E9_A1_8C) + "|" + String(_E5_9B_9E_E7_AD_94[0]) + "|" + String(_E5_9B_9E_E7_AD_94[1]) + "|" + String(_E5_9B_9E_E7_AD_94[2]), 0, 0, "", _E8_A9_A6_E7_AE_97_E8_A1_A8_E7_B6_B2_E5_9D_80, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
             i = setDatetime(0, 0, 0, 0, 0, 0);
             linebot_push_message('jHELtzp2oiHQK5sdSciRYvNi2FIwZiCbVhjRoxvhuzXVZCHGx6PtY6BqGJS6OyYL7AE42vqyzPikesqbLb+mE2kj06X5YofYiSAM9YAA0+1Phs2pSKrlhtDVOTc479rvHLz6lW9MPdPLIxyAk31bTQdB04t89/1O/w1cDnyilFU=', 'U119e52abd339210576e354879f5ce368', line_url_escape("bot", "text", ([getDatetime(i, "datetime"), '<br>', 'Question:' + String(_E5_95_8F_E9_A1_8C), '<br>', '<br>', _E5_9B_9E_E7_AD_94[0], '<br>', '<br>', _E5_9B_9E_E7_AD_94[1], '<br>', '<br>', _E5_9B_9E_E7_AD_94[2]].join('')), '', '', ''));
@@ -115,11 +115,11 @@ const main = async () => {
             }
             _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = !_E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B;
         };
-        document.getElementById("gamebutton_volume_off").addEventListener("click", gamebutton_volume_off_onclick, true);
+       document.getElementById("gamebutton_volume_off").addEventListener("click", gamebutton_volume_off_onclick, true);
         async function gamebutton_mic_off_onclick(event) {
             if (_E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B) {
                 button_set('mic_off', "value", 'Click me to record');
-                button_set('mic_off', "color", '#000000');
+                button_set('mic_off', "color", '#3366ff');
                 await recording_stopRecordingGeminiSTT();
                 await delay(1);
             } else {
