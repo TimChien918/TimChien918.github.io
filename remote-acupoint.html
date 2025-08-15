@@ -91,10 +91,10 @@ const main = async () => {
         window.gemini_chat_response = gemini_chat_response;
         async function gamebutton_replay_onclick(event) {
             gemini_chat_clear();
-            div_set('', "innerHTML", '已重置');
+            div_set('', "innerHTML", '');
             div_set('c', "innerHTML", '');
             div_set('e', "innerHTML", '');
-            textarea_set('', "value", '');
+            textarea_set('', "value", '已重置');
             gemini_chat_initial(GeminiKey, "gemini-2.0-flash", 1000, 1.0, ([_E4_B8_AD_E9_86_ABPrompt, 'And you will translate your answer as follows', _E7_BF_BB_E8_AD_AFPrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB, '並且記住你是一個有問必答的超級中醫'].join('')));
             await delay(2);
         };
