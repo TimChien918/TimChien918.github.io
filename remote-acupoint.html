@@ -92,9 +92,9 @@ const main = async () => {
         async function gamebutton_replay_onclick(event) {
             gemini_chat_clear();
             div_set('', "innerHTML", '');
+            div_set('c', "innerHTML", '');
+            div_set('e', "innerHTML", '');
             textarea_set('', "value", '');
-            textarea_set('e', "value", '');
-            textarea_set('c', "value", '');
         };
         document.getElementById("gamebutton_replay").addEventListener("click", gamebutton_replay_onclick, true);
         async function gamebutton_save_onclick(event) {
