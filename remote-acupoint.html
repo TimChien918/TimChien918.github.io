@@ -56,7 +56,7 @@ const main = async () => {
     async function _E9_80_81_E5_87_BA_E5_B0_8D_E8_A9_B1() {
         div_set('', "innerHTML", ([fontText(3, '#cc0000', 'Arial', (textarea_get('', "value"))), '<br>', '<br>', div_get('', "innerHTML")].join('')));
         _E5_95_8F_E9_A1_8C = (textarea_get('', "value"));
-        await gemini_chat_run((textarea_get('', "value")),'請回答對應的穴位');
+        await gemini_chat_run((textarea_get('', "value")),'（請回答我對應的穴位，並嚴格按照我提供的格式回答，如果是寒暄或找你聊天，則無需回答穴位，並重新辨識我使用的語言並使用對應的語言回答(這一句是程式加的補充，不算我使用的語言）');
         textarea_set('', "value", '');
     }
 
