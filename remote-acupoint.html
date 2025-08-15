@@ -112,10 +112,12 @@ const main = async () => {
             if (_E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B) {
                 ttsSwitch(0);
                 button_set('volume_off', "value", 'Turn on the speaker');
+                button_set('volume_off', "color", '#3366ff');
                 ttsState("cancel");
             } else {
                 ttsSwitch(1);
                 button_set('volume_off', "value", 'Turn off the speaker');
+                button_set('volume_off', "color", '#ff0000');
             }
             _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = !_E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B;
         };
