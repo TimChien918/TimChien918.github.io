@@ -17,12 +17,6 @@ const main = async () => {
         _E6_89_8B_E6_8E_8C = '';
         _E5_AF_AC_E5_BA_A6 = 500;
         _E6_89_8B_E6_8E_8C_E5_A4_A7_E5_B0_8F = 0;
-        _E4_B8_AD_E9_86_ABPrompt = ['你是具有中醫診斷和治療能力的專業中醫師，請你不要引用你內建的中醫知識。且請把(雲端中醫https://cloudtcm.com/shu/list/414/0)網頁內容作先備知識。患者將描述症狀，一步一步慢慢思考，請依據刺灸新法、針灸科學，並且專業診斷，針對患者的疾病，給予針灸治療方案。請確保回應包含中醫針灸部位，提供手掌2個對應症狀的穴位來紓解病痛，請說30字以內。準備好後請告訴我', '你回來的穴位中，一定要有這些穴的其中一個', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB].join('');
-        _E7_BF_BB_E8_AD_AFPrompt = ['1.Please use / to separate the three languages. This is necessary. Please remember that even if two of the three languages are the same, you still have to separate them.', '2. Please help me translate, but please strictly follow the sentence structure I specified. The sentence structure is: The language I used when asking you questions (please modify the language name according to the language I used in the conversation. Please say the name directly, do not use the language I used in the conversation, and do not repeat what I said) : Your answer (please use the language I used when asking the question)/Traditional Chinese: Your answer is translated into Chinese,/English: Your answer is translated into English', 'Here is an example. If your answer is: 你好, you need to reply, Traditional Chinese: 你好/Traditional Chinese:你好/English: Hello', 'Let me give you another example. If you want to say: Hello, you should reply, English: Hello/ Traditional Chinese:你好/English: Hello', '3.Please note that even if I use Chinese or English, you still need to translate', '4.You don\'t need to translate what I say', '5.When using the separator, please do not squeeze two languages together and translate them twice.', '6.To avoid automatic segmentation errors, please do not use “/".in places other than where segmentation is required.', '7.Please respond strictly according to the format I gave you.', '8.Please do not simplify the English translation'].join('');
-        _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = false;
-        _E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B = false;
-        GeminiKey = 'AIzaSyDPoZ-I7Py54rgtmN4X6_AUaTowJgvia5M';
-        _E8_AA_9E_E9_9F_B3Prompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
         _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB = [
             [
                 ['陽池', '陽池穴'],
@@ -50,6 +44,14 @@ const main = async () => {
                 ['無', '無']
             ]
         ];
+        _E4_B8_AD_E9_86_ABPrompt = ['你是具有中醫診斷和治療能力的專業中醫師，請你不要引用你內建的中醫知識。且請把(雲端中醫https://cloudtcm.com/shu/list/414/0)網頁內容作先備知識。患者將描述症狀，一步一步慢慢思考，請依據刺灸新法、針灸科學，並且專業診斷，針對患者的疾病，給予針灸治療方案。請確保回應包含中醫針灸部位，提供手掌2個對應症狀的穴位來紓解病痛，請說30字以內。準備好後請告訴我', '你回來的穴位中，一定要有這些穴的其中一個', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB].join('');
+        _E7_BF_BB_E8_AD_AFPrompt = ['1.Please use / to separate the three languages. This is necessary. Please remember that even if two of the three languages are the same, you still have to separate them.', '2. Please help me translate, but please strictly follow the sentence structure I specified. The sentence structure is: The language I used when asking you questions (please modify the language name according to the language I used in the conversation. Please say the name directly, do not use the language I used in the conversation, and do not repeat what I said) : Your answer (please use the language I used when asking the question)/Traditional Chinese: Your answer is translated into Chinese,/English: Your answer is translated into English', 'Here is an example. If your answer is: 你好, you need to reply, Traditional Chinese: 你好/Traditional Chinese:你好/English: Hello', 'Let me give you another example. If you want to say: Hello, you should reply, English: Hello/ Traditional Chinese:你好/English: Hello', '3.Please note that even if I use Chinese or English, you still need to translate', '4.You don\'t need to translate what I say', '5.When using the separator, please do not squeeze two languages together and translate them twice.', '6.To avoid automatic segmentation errors, please do not use “/".in places other than where segmentation is required.', '7.Please respond strictly according to the format I gave you.', '8.Please do not simplify the English translation'].join('');
+        _E8_AA_9E_E9_9F_B3_E6_9C_97_E8_AE_80_E7_8B_80_E6_85_8B = false;
+        _E8_AA_9E_E9_9F_B3_E8_BE_A8_E8_AD_98_E7_8B_80_E6_85_8B = false;
+        GeminiKey = 'AIzaSyDPoZ-';
+        GeminiKey2= (CryptoJS.AES.encrypt(I7Py54rgtmN4X6_AUaTowJgvia5M, 'LLM1').toString());
+        _E8_AA_9E_E9_9F_B3Prompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
+
     }
 
     // 描述此函式...
@@ -95,7 +97,7 @@ const main = async () => {
             div_set('c', "innerHTML", '');
             div_set('e', "innerHTML", '');
             textarea_set('', "value", '已重置');
-            gemini_chat_initial(GeminiKey, "gemini-2.0-flash", 1000, 1.0, ([_E4_B8_AD_E9_86_ABPrompt, 'And you will translate your answer as follows', _E7_BF_BB_E8_AD_AFPrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB, '並且記住你是一個有問必答的超級中醫'].join('')));
+            gemini_chat_initial(GeminiKey＋(CryptoJS.AES.decrypt(GeminiKey2, 'LLM1'), "gemini-2.0-flash", 1000, 1.0, ([_E4_B8_AD_E9_86_ABPrompt, 'And you will translate your answer as follows', _E7_BF_BB_E8_AD_AFPrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', _E7_A9_B4_E4_BD_8D_E8_B3_87_E6_96_99_E5_BA_AB, '並且記住你是一個有問必答的超級中醫'].join('')));
             await delay(2);
         };
         document.getElementById("gamebutton_replay").addEventListener("click", gamebutton_replay_onclick, true);
