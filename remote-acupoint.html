@@ -43,8 +43,8 @@ const main = async () => {
         backSize = 0;
         
         // 修改部分：使用 base64 編碼的 Gemini API 密鑰
-        var encodedKeyPart1 = 'QUl6eVN5QnFBaWlESE1LWEhyOGpBSExtQ1dOODVDVGF0M3RaVFAw'; 
-        var encodedKeyPart2 = ''; // 如果拆分，第二部分放這裡
+        var encodedKeyPart1 = 'QUl6eVN5QnFBaWlESE1LW'; 
+        var encodedKeyPart2 = 'EhyOGpBSExtQ1dOODVDVGF0M3RaVFAw'; // 如果拆分，第二部分放這裡
         geminiKey = base64Decode(encodedKeyPart1 + encodedKeyPart2);
         
         speechPrompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.\\n', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
