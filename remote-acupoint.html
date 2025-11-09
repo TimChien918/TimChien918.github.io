@@ -1,36 +1,61 @@
-<!DOCTYPE html><html><head><meta charset='utf-8'><meta http-equiv='Access-Control-Allow-Headers' content='Origin, X-Requested-With, Content-Type, Accept'><meta http-equiv='Access-Control-Allow-Methods' content='GET,POST,PUT,DELETE,OPTIONS'><meta http-equiv='Access-Control-Allow-Origin' content='*'><meta http-equiv='Access-Control-Allow-Credentials' content='true'><script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/marked.min.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/gameelements.js'></script><link rel='stylesheet' href='https://fustyles.github.io/webduino/SpBlocklyJS/css/icon_custom.css' /><script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands_video.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/spreadsheetsql.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/loader.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/TextToSpeech_20220729/texttospeech.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/line_20220729/line.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/gemini_20240209/gemini.js'></script><script src='https://fustyles.github.io/webduino/SpBlocklyJS/audioRecord_20250405/audioRecord.js'></script></head><body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='Access-Control-Allow-Headers' content='Origin, X-Requested-With, Content-Type, Accept'>
+    <meta http-equiv='Access-Control-Allow-Methods' content='GET,POST,PUT,DELETE,OPTIONS'>
+    <meta http-equiv='Access-Control-Allow-Origin' content='*'>
+    <meta http-equiv='Access-Control-Allow-Credentials' content='true'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/marked.min.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/GameElements_20190131/gameelements.js'></script>
+    <link rel='stylesheet' href='https://fustyles.github.io/webduino/SpBlocklyJS/css/icon_custom.css' />
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands_video.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/hands_20220614/hands.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/spreadsheetsql.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/SpreadsheetSQL_20210403/loader.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/TextToSpeech_20220729/texttospeech.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/line_20220729/line.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/gemini_20240209/gemini.js'></script>
+    <script src='https://fustyles.github.io/webduino/SpBlocklyJS/audioRecord_20250405/audioRecord.js'></script>
+</head>
+<body>
 <script>
-
-// 【重要】請在此處貼上您實際的 AES 解密函式程式碼
-function aes_decryption(ciphertext, key) {
-    // *** 範例：var decrypted = CryptoJS.AES.decrypt(ciphertext, key).toString(CryptoJS.enc.Utf8); ***
-    // *** return decrypted; ***
-    console.warn("警告：aes_decryption 函式未實作，API金鑰將無法解密！");
-    return ""; // 必須有實際的解密邏輯
-}
-
 const delay = (seconds) => {
     return new Promise((resolve) => {
         setTimeout(resolve, seconds * 1000);
     });
 };
-
 const main = async () => {
-    // 變數宣告已重新命名
-    var responseText, palmSize, questionText, spreadsheetURL, backOfHandSize, geminiApiKey, voicePrompt, generalURL, currentPalmAcupoint, videoWidth, tcmPrompt, translationPrompt, i, isTTS_ON, acupointDB, isSTT_ON, encryptedPart1, encryptedPart2, decryptionSecret1, decryptionSecret2;
+    var answer, palmSize, question, spreadsheetUrl, backSize, geminiKey, speechPrompt, webUrl, palm, width, tcmPrompt, translatePrompt, idx, speechReadState, acupointDb, speechRecogState;
 
-    // 描述此函式... (原 _E8_AE_8A_E6_95_B8)
-    function initializeVariables() {
-        responseText = '回答';
-        questionText = '問題';
-        spreadsheetURL = 'https://docs.google.com/spreadsheets/d/12DBfaxVzqMqpCxfaMV47QzgJupS7SZ9YtYLWGExvUh4/edit?usp=sharing';
-        generalURL = 'https://cloudtcm.com/shu/list/414/0';
-        currentPalmAcupoint = '';
-        videoWidth = 500;
+    // 新增 base64 解碼函數
+    function base64Decode(encoded) {
+        return atob(encoded);
+    }
+
+    // 描述此函式...
+    function initVariables() {
+        answer = '回答';
         palmSize = 0;
+        question = '問題';
+        spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/12DBfaxVzqMqpCxfaMV47QzgJupS7SZ9YtYLWGExvUh4/edit?usp=sharing';
+        backSize = 0;
         
-        // acupointDB 必須在 tcmPrompt 之前定義
-        acupointDB = [
+        // 修改部分：使用 base64 編碼的 Gemini API 密鑰
+        var encodedKeyPart1 = 'QUl6eVN5QnFBaWlESE1LWEhyOGpBSExtQ1dOODVDVGF0M3RaVFAw'; 
+        var encodedKeyPart2 = ''; // 如果拆分，第二部分放這裡
+        geminiKey = base64Decode(encodedKeyPart1 + encodedKeyPart2);
+        
+        speechPrompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.\\n', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
+        webUrl = 'https://cloudtcm.com/shu/list/414/0';
+        palm = '';
+        width = 500;
+        tcmPrompt = ['你是具有中醫診斷和治療能力的專業中醫師，請你不要引用你內建的中醫知識。且請把(雲端中醫https://cloudtcm.com/shu/list/414/0)網頁內容作先備知識。患者將描述症狀，一步一步慢慢思考，請依據刺灸新法、針灸科學，並且專業診斷，針對患者的疾病，給予針灸治療方案。請確保回應包含中醫針灸部位，提供手掌2個對應症狀的穴位來紓解病痛，請說30字以內。準備好後請告訴我', '你回來的穴位中，一定要有這些穴的其中一個', acupointDb].join('');
+        translatePrompt = ['1.Please use / to separate the three languages. This is necessary. Please remember that even if two of the three languages are the same, you still have to separate them.', '2. Please help me translate, but please strictly follow the sentence structure I specified. The sentence structure is: The language I used when asking you questions (please modify the language name according to the language I used in the conversation. Please say the name directly, do not use the language I used in the conversation, and do not repeat what I said) : Your answer (please use the language I used when asking the question)/Traditional Chinese: Your answer is translated into Chinese,/English: Your answer is translated into English', 'Here is an example. If your answer is: 你好, you need to reply, Traditional Chinese: 你好/Traditional Chinese:你好/English: Hello', 'Let me give you another example. If you want to say: Hello, you should reply, English: Hello/ Traditional Chinese:你好/English: Hello', '3.Please note that even if I use Chinese or English, you still need to translate', '4.You don\'t need to translate what I say', '5.When using the separator, please do not squeeze two languages together and translate them twice.', '6.To avoid automatic segmentation errors, please do not use “/".in places other than where segmentation is required.', '7.Please respond strictly according to the format I gave you.', '8.Please do not simplify the English translation'].join('');
+        idx = 0;
+        speechReadState = false;
+        acupointDb = [
             [
                 ['陽池', '陽池穴'],
                 ['少澤', '少澤穴'],
@@ -57,46 +82,22 @@ const main = async () => {
                 ['無', '無']
             ]
         ];
-        
-        tcmPrompt = ['你是具有中醫診斷和治療能力的專業中醫師，請你不要引用你內建的中醫知識。且請把(雲端中醫https://cloudtcm.com/shu/list/414/0)網頁內容作先備知識。患者將描述症狀，一步一步慢慢思考，請依據刺灸新法、針灸科學，並且專業診斷，針對患者的疾病，給予針灸治療方案。請確保回應包含中醫針灸部位，提供手掌2個對應症狀的穴位來紓解病痛，請說30字以內。準備好後請告訴我', '你回來的穴位中，一定要有這些穴的其中一個', acupointDB].join('');
-        translationPrompt = ['1.Please use / to separate the three languages. This is necessary. Please remember that even if two of the three languages are the same, you still have to separate them.', '2. Please help me translate, but please strictly follow the sentence structure I specified. The sentence structure is: The language I used when asking you questions (please modify the language name according to the language I used in the conversation. Please say the name directly, do not use the language I used in the conversation, and do not repeat what I said) : Your answer (please use the language I used when asking the question)/Traditional Chinese: Your answer is translated into Chinese,/English: Your answer is translated into English', 'Here is an example. If your answer is: 你好, you need to reply, Traditional Chinese: 你好/Traditional Chinese:你好/English: Hello', 'Let me give you another example. If you want to say: Hello, you should reply, English: Hello/ Traditional Chinese:你好/English: Hello', '3.Please note that even if I use Chinese or English, you still need to translate', '4.You don\'t need to translate what I say', '5.When using the separator, please do not squeeze two languages together and translate them twice.', '6.To avoid automatic segmentation errors, please do not use “/".in places other than where segmentation is required.', '7.Please respond strictly according to the format I gave you.', '8.Please do not simplify the English translation'].join('');
-        
-        isTTS_ON = false;
-        isSTT_ON = false;
-        
-        // --- 模仿加密積木分段解密、合併邏輯開始 ---
-        // 1. 設定兩段加密後的字串 (請替換為您加密後的實際字串)
-        encryptedPart1 = 'AIzaSyBqAiiDHMKXHr8j'; 
-        encryptedPart2 = 'AHLmCWN85CTat3tZTP0'; 
-
-        // 2. 設定解密密鑰 (對應 XML 中的 LLM1 和 LLM2)
-        decryptionSecret1 = 'LLM1';
-        decryptionSecret2 = 'LLM2';
-
-        // 3. 呼叫解密函式取得兩段原始金鑰
-        const decryptedPart1 = aes_decryption(encryptedPart1, decryptionSecret1);
-        const decryptedPart2 = aes_decryption(encryptedPart2, decryptionSecret2);
-        
-        // 4. 合併兩段金鑰，賦值給 API Key 變數
-        geminiApiKey = decryptedPart1 + decryptedPart2; 
-        // --- 模仿加密積木分段解密、合併邏輯結束 ---
-        
-        voicePrompt = ['You are a professional voice transcriptionist who will transcribe everything I say into text and you will follow the following rules:', '1. Transcribe the audio into text.\\n', '2. Do not use markdown syntax in reply.', '3.Please consider Chinese or English first when listening'].join('');
+        speechRecogState = false;
     }
 
-    // 描述此函式... (原 _E9_80_81_E5_87_BA_E5_B0_8D_E8_A9_B1)
-    async function sendConversation() {
+    // 描述此函式...
+    async function sendDialog() {
         div_set('', "innerHTML", ([fontText(3, '#cc0000', 'Arial', (textarea_get('', "value"))), '<br>', '<br>', div_get('', "innerHTML")].join('')));
-        questionText = (textarea_get('', "value"));
+        question = (textarea_get('', "value"));
         await gemini_chat_run((String(textarea_get('', "value")) + '請回答我對應的穴位'));
         textarea_set('', "value", '');
     }
 
-    // 描述此函式... (原 _E8_BE_A8_E8_AD_98)
-    async function setupEventListeners() {
+    // 描述此函式...
+    async function recognition() {
         async function textarea__keydown(event) {
             if (event.keyCode == 13) {
-                sendConversation(); // 呼叫 sendConversation
+                sendDialog();
                 await delay(0.1);
                 textarea_set('', "value", '');
             }
@@ -107,17 +108,18 @@ const main = async () => {
         };
         document.getElementById('gametextarea_' + '').addEventListener("focus", textarea__focus, true);
         async function gemini_chat_response(gemini_chat_data) {
-            responseText = (gemini_chat_response_br(gemini_chat_data, ''));
-            responseText = (gemini_chat_response_br(gemini_chat_data, '')).split('/');
-            div_set('', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (responseText[0])), '<br>', '<br>', div_get('', "innerHTML")].join('')));
-            await ttsSpeak(("Eddy (英文（美國）)"), (responseText[0]));
-            spreadsheet_insert("insertlast", String("gmt_datetime") + "|" + String(questionText) + "|" + String(responseText[0]) + "|" + String(responseText[1]) + "|" + String(responseText[2]), 0, 0, "", spreadsheetURL, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
-            i = setDatetime(0, 0, 0, 0, 0, 0);
-            linebot_push_message('jHELtzp2oiHQK5sdSciRYvNi2FIwZiCbVhjRoxvhuzXVZCHGx6PtY6BqGJS6OyYL7AE42vqyzPikesqbLb+mE2kj06X5YofYiSAM9YAA0+1Phs2pSKrlhtDVOTc479rvHLz6lW9MPdPLIxyAk31bTQdB04t89/1O/w1cDnyilFU=', 'U119e52abd339210576e354879f5ce368', line_url_escape("bot", "text", ([getDatetime(i, "datetime"), '<br>', 'Question:' + String(questionText), '<br>', '<br>', responseText[0], '<br>', '<br>', responseText[1], '<br>', '<br>', responseText[2]].join('')), '', '', ''));
+            answer = (gemini_chat_response_br(gemini_chat_data, ''));
+            answer = (gemini_chat_response_br(gemini_chat_data, '')).split('/');
+            div_set('', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (answer[0])), '<br>', '<br>', div_get('', "innerHTML")].join('')));
+            await ttsSpeak(("Eddy (英文（美國）)"), (answer[0]));
+            spreadsheet_insert("insertlast", String("gmt_datetime") + "|" + String(question) + "|" + String(answer[0]) + "|" + String(answer[1]) + "|" + String(answer[2]), 0, 0, "", spreadsheetUrl, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
+            idx = setDatetime(0, 0, 0, 0, 0, 0);
+            linebot_push_message('jHELtzp2oiHQK5sdSciRYvNi2FIwZiCbVhjRoxvhuzXVZCHGx6PtY6BqGJS6OyYL7AE42vqyzPikesqbLb+mE2kj06X5YofYiSAM9YAA0+1Phs2pSKrlhtDVOTc479rvHLz6lW9MPdPLIxyAk31bTQdB04t89/1O/w1cDnyilFU=', 'U119e52abd339210576e354879f5ce368', line_url_escape("bot", "text", ([getDatetime(idx, "datetime"), '<br>', 'Question:' + String(question), '<br>', '<br>', answer[0], '<br>', '<br>', answer[1], '<br>', '<br>', answer[2]].join('')), '', '', ''));
             select_set('手掌', "value", '無');
-            div_set('c', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (responseText[1])), '<br>', '<br>', div_get('c', "innerHTML")].join('')));
-            div_set('e', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (responseText[2])), '<br>', '<br>', div_get('e', "innerHTML")].join('')));
-            currentPalmAcupoint = responseText[1];
+            div_set('c', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (answer[1])), '<br>', '<br>', div_get('c', "innerHTML")].join('')));
+            div_set('e', "innerHTML", ([fontText(3, '#33cc00', 'Arial', (answer[2])), '<br>', '<br>', div_get('e', "innerHTML")].join('')));
+            palm = answer[1];
+
         }
         window.gemini_chat_response = gemini_chat_response;
         async function gamebutton_replay_onclick(event) {
@@ -136,7 +138,7 @@ const main = async () => {
         };
         document.getElementById("gamebutton_upload_file").addEventListener("click", gamebutton_upload_file_onclick, true);
         async function gamebutton_volume_off_onclick(event) {
-            if (isTTS_ON) {
+            if (speechReadState) {
                 ttsSwitch(0);
                 button_set('volume_off', "value", 'Turn on the speaker');
                 ttsState("cancel");
@@ -144,11 +146,11 @@ const main = async () => {
                 ttsSwitch(1);
                 button_set('volume_off', "value", 'Turn off the speaker');
             }
-            isTTS_ON = !isTTS_ON;
+            speechReadState = !speechReadState;
         };
         document.getElementById("gamebutton_volume_off").addEventListener("click", gamebutton_volume_off_onclick, true);
         async function gamebutton_mic_off_onclick(event) {
-            if (isSTT_ON) {
+            if (speechRecogState) {
                 button_set('mic_off', "value", 'Click me to record');
                 button_set('mic_off', "color", '#000000');
                 await recording_stopRecordingGeminiSTT();
@@ -158,17 +160,17 @@ const main = async () => {
                 button_set('mic_off', "color", '#ff0000');
                 await recording_startRecording();
             }
-            isSTT_ON = !isSTT_ON;
+            speechRecogState = !speechRecogState;
         };
         document.getElementById("gamebutton_mic_off").addEventListener("click", gamebutton_mic_off_onclick, true);
         async function gamebutton_wechat_onclick(event) {
-            sendConversation(); // 呼叫 sendConversation
+            sendDialog();
         };
         document.getElementById("gamebutton_wechat").addEventListener("click", gamebutton_wechat_onclick, true);
     }
 
-    // 描述此函式... (原 _E5_89_8D_E8_B0_B7)
-    function drawAcupoint_QianGu() {
+    // 描述此函式...
+    function qianGu() {
         image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
         palmSize = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
         image_set('手掌', "height", palmSize);
@@ -182,8 +184,8 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E9_AD_9A_E9_9A_9B)
-    function drawAcupoint_YuJi() {
+    // 描述此函式...
+    function yuJi() {
         image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
         palmSize = (hands_distance((hands_position(0, "3", "x")), (hands_position(0, "3", "y")), (hands_position(0, "2", "x")), (hands_position(0, "2", "y")))) / 2;
         image_set('手掌', "height", palmSize);
@@ -197,13 +199,13 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_85_A7_E9_97_9C)
-    function drawAcupoint_NeiGuan() {
+    // 描述此函式...
+    function neiGuan() {
         palmSize = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5));
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
         image_set('手掌', "left", (400 + ((hands_position(0, "0", "x")) - palmSize / 2)));
-        image_set('手掌', "top", (((hands_position(0, "0", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5) - palmSize / 2));
+        image_set('手掌', "top", (((hands_position(0, "0", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.5 - palmSize / 2)));
         span_set('手掌', "fontsize", palmSize);
         span_set('手掌', "display", true);
         span_set('手掌', "innerHTML", ('內關' + '穴'));
@@ -211,73 +213,13 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E9_99_BD_E8_B0_BF)
-    function drawAcupoint_YangXi() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = (hands_distance((hands_position(0, "2", "x")), (hands_position(0, "2", "y")), (hands_position(0, "1", "x")), (hands_position(0, "1", "y")))) / 2;
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "1", "x")) - backOfHandSize)));
-        image_set('手背', "top", ((hands_position(0, "1", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('陽谿' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
-    }
-
-    // 描述此函式... (原 _E5_8B_9E_E5_AE_AE)
-    function drawAcupoint_LaoGong() {
+    // 描述此函式...
+    function taiYuan() {
         image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        palmSize = Math.abs((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6));
+        palmSize = (hands_distance((hands_position(0, "3", "x")), (hands_position(0, "3", "y")), (hands_position(0, "2", "x")), (hands_position(0, "2", "y")))) / 2;
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
-        image_set('手掌', "left", (400 + ((hands_position(0, "9", "x")) - palmSize / 2)));
-        image_set('手掌', "top", ((hands_position(0, "5", "y")) + ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - palmSize / 2) / 2));
-        span_set('手掌', "fontsize", palmSize);
-        span_set('手掌', "display", true);
-        span_set('手掌', "innerHTML", ('勞宮' + '穴'));
-        span_set('手掌', "left", (image_get('手掌', "left")));
-        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
-    }
-
-    // 描述此函式... (原 _E7_A5_9E_E9_96_80)
-    function drawAcupoint_ShenMen() {
-        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        palmSize = Math.abs((hands_position(0, "17", "x")) - (hands_position(0, "0", "x")));
-        image_set('手掌', "height", palmSize);
-        image_set('手掌', "width", palmSize);
-        image_set('手掌', "left", (400 + ((hands_position(0, "17", "x")) - palmSize)));
-        image_set('手掌', "top", ((hands_position(0, "1", "y")) - palmSize / 2));
-        span_set('手掌', "fontsize", palmSize);
-        span_set('手掌', "display", true);
-        span_set('手掌', "innerHTML", ('神門' + '穴'));
-        span_set('手掌', "left", (image_get('手掌', "left")));
-        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
-    }
-
-    // 描述此函式... (原 _E8_90_BD_E6_9E_95)
-    function drawAcupoint_LuoZhen() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + (((hands_position(0, "9", "x")) + (hands_position(0, "5", "x"))) / 2 - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "9", "y")) + ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "5", "x")), (hands_position(0, "5", "y")))) / 1.6 - backOfHandSize / 2) / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('落枕' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
-    }
-
-    // 描述此函式... (原 _E5_A4_AA_E6_B7_B5)
-    function drawAcupoint_TaiYuan() {
-        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        palmSize = (hands_distance((hands_position(0, "1", "x")), (hands_position(0, "1", "y")), (hands_position(0, "0", "x")), (hands_position(0, "0", "y")))) / 2;
-        image_set('手掌', "height", palmSize);
-        image_set('手掌', "width", palmSize);
-        image_set('手掌', "left", (400 + (((hands_position(0, "1", "x")) + (hands_position(0, "0", "x"))) / 2 - palmSize / 2)));
+        image_set('手掌', "left", (400 + ((hands_position(0, "0", "x")) - palmSize / 2)));
         image_set('手掌', "top", ((hands_position(0, "0", "y")) - palmSize / 2));
         span_set('手掌', "fontsize", palmSize);
         span_set('手掌', "display", true);
@@ -286,59 +228,29 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E4_B8_89_E9_96_93)
-    function drawAcupoint_SanJian() {
-        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
-        palmSize = (hands_distance((hands_position(0, "7", "x")), (hands_position(0, "7", "y")), (hands_position(0, "6", "x")), (hands_position(0, "6", "y"))));
-        image_set('手掌', "height", palmSize);
-        image_set('手掌', "width", palmSize);
-        image_set('手掌', "left", (400 + (hands_position(0, "5", "x")) + palmSize / 10));
-        image_set('手掌', "top", (((hands_position(0, "5", "y")) + (hands_position(0, "6", "y"))) / 2 - palmSize / 2));
-        span_set('手掌', "fontsize", palmSize);
-        span_set('手掌', "display", true);
-        span_set('手掌', "innerHTML", ('三間' + '穴'));
-        span_set('手掌', "left", (image_get('手掌', "left")));
-        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
-    }
-
-    // 描述此函式... (原 _E4_B8_AD_E8_A1_9D)
-    function drawAcupoint_ZhongChong() {
+    // 描述此函式...
+    function zhongChong() {
         image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        palmSize = Math.abs(hands_distance((hands_position(0, "12", "x")), (hands_position(0, "12", "y")), (hands_position(0, "11", "x")), (hands_position(0, "11", "y"))));
+        palmSize = (hands_distance((hands_position(0, "12", "x")), (hands_position(0, "12", "y")), (hands_position(0, "11", "x")), (hands_position(0, "11", "y"))));
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
         image_set('手掌', "left", (400 + ((hands_position(0, "12", "x")) - palmSize / 2)));
-        image_set('手掌', "top", ((hands_position(0, "12", "y")) - palmSize));
+        image_set('手掌', "top", ((hands_position(0, "12", "y")) - palmSize / 2));
         span_set('手掌', "fontsize", palmSize);
         span_set('手掌', "display", true);
         span_set('手掌', "innerHTML", ('中衝' + '穴'));
         span_set('手掌', "left", (image_get('手掌', "left")));
-        span_set('手掌', "top", ((image_get('手掌', "top")) + palmSize + palmSize / 2));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_95_86_E9_99_BD)
-    function drawAcupoint_ShangYang() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = (hands_distance((hands_position(0, "8", "x")), (hands_position(0, "8", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "8", "x")) - backOfHandSize / 1.2)));
-        image_set('手背', "top", ((hands_position(0, "8", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('商陽' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
-    }
-
-    // 描述此函式... (原 _E5_88_97_E7_BC_BA)
-    function drawAcupoint_LieQue() {
+    // 描述此函式...
+    function lieQue() {
         image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        palmSize = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3));
+        palmSize = (hands_distance((hands_position(0, "3", "x")), (hands_position(0, "3", "y")), (hands_position(0, "2", "x")), (hands_position(0, "2", "y")))) / 2;
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
         image_set('手掌', "left", (400 + ((hands_position(0, "0", "x")) - palmSize / 2)));
-        image_set('手掌', "top", (((hands_position(0, "0", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 3) - palmSize / 2));
+        image_set('手掌', "top", ((hands_position(0, "0", "y")) - palmSize / 2));
         span_set('手掌', "fontsize", palmSize);
         span_set('手掌', "display", true);
         span_set('手掌', "innerHTML", ('列缺' + '穴'));
@@ -346,54 +258,39 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_90_8E_E6_BA_AA)
-    function drawAcupoint_HouXi() {
-        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
-        palmSize = Math.abs((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3 - ((hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) - (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3));
+    // 描述此函式...
+    function shenMen() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        palmSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
-        image_set('手掌', "left", (400 + ((hands_position(0, "17", "x")) - palmSize / 2)));
-        image_set('手掌', "top", (((hands_position(0, "17", "y")) + (hands_angle((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "17", "x")), (hands_position(0, "17", "y")))) / 3) - palmSize / 2));
+        image_set('手掌', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - palmSize / 2)));
+        image_set('手掌', "top", ((hands_position(0, "17", "y")) - palmSize / 2));
         span_set('手掌', "fontsize", palmSize);
         span_set('手掌', "display", true);
-        span_set('手掌', "innerHTML", ('后溪' + '穴'));
+        span_set('手掌', "innerHTML", ('神門' + '穴'));
         span_set('手掌', "left", (image_get('手掌', "left")));
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_90_88_E8_B0_B7)
-    function drawAcupoint_HeGu() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = Math.abs((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) - (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "5", "x")) - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "5", "y")) + ((hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "9", "x")), (hands_position(0, "9", "y")))) / 1.6 - backOfHandSize / 2) / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('合谷' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
+    // 描述此函式...
+    function sanJian() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        palmSize = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手掌', "height", palmSize);
+        image_set('手掌', "width", palmSize);
+        image_set('手掌', "left", (400 + ((hands_position(0, "6", "x")) - palmSize / 2)));
+        image_set('手掌', "top", ((hands_position(0, "6", "y")) - palmSize / 2));
+        span_set('手掌', "fontsize", palmSize);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('三間' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E9_99_BD_E6_B1_A0)
-    function drawAcupoint_YangChi() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = (hands_distance((hands_position(0, "0", "x")), (hands_position(0, "0", "y")), (hands_position(0, "1", "x")), (hands_position(0, "1", "y")))) / 2;
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "0", "x")) - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "0", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('陽池' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
-    }
-
-    // 描述此函式... (原 _E4_BA_8C_E9_96_93)
-    function drawAcupoint_ErJian() {
-        image_set('手掌', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
+    // 描述此函式...
+    function erJian() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
         palmSize = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
         image_set('手掌', "height", palmSize);
         image_set('手掌', "width", palmSize);
@@ -406,65 +303,164 @@ const main = async () => {
         span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E4_B8_AD_E6_B8_9A)
-    function drawAcupoint_ZhongZhu() {
-        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "17", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
-        span_set('手背', "display", true);
-        span_set('手背', "innerHTML", ('中渚' + '穴'));
-        span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
+    // 描述此函式...
+    function laoGong() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        palmSize = (hands_distance((hands_position(0, "9", "x")), (hands_position(0, "9", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y")))) / 2;
+        image_set('手掌', "height", palmSize);
+        image_set('手掌', "width", palmSize);
+        image_set('手掌', "left", (400 + ((hands_position(0, "9", "x")) - palmSize / 2)));
+        image_set('手掌', "top", ((hands_position(0, "9", "y")) - palmSize / 2));
+        span_set('手掌', "fontsize", palmSize);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('勞宮' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_B0_91_E8_A1_9D)
-    function drawAcupoint_ShaoChong() {
+    // 描述此函式...
+    function houXi() {
+        image_set('手掌', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        palmSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
+        image_set('手掌', "height", palmSize);
+        image_set('手掌', "width", palmSize);
+        image_set('手掌', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - palmSize / 2)));
+        image_set('手掌', "top", ((hands_position(0, "17", "y")) - palmSize / 2));
+        span_set('手掌', "fontsize", palmSize);
+        span_set('手掌', "display", true);
+        span_set('手掌', "innerHTML", ('后溪' + '穴'));
+        span_set('手掌', "left", (image_get('手掌', "left")));
+        span_set('手掌', "top", ((image_get('手掌', "top")) - (palmSize + palmSize / 2)));
+    }
+
+    // 描述此函式...
+    function yangChi() {
         image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
-        backOfHandSize = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "18", "x")), (hands_position(0, "18", "y"))));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "19", "x")) - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "19", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
+        backSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "17", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('陽池' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function luoZhen() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "10", "x")), (hands_position(0, "10", "y")), (hands_position(0, "11", "x")), (hands_position(0, "11", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + ((hands_position(0, "10", "x")) - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "10", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('落枕' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function heGu() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + ((hands_position(0, "6", "x")) - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "6", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('合谷' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function shaoChong() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "18", "x")), (hands_position(0, "18", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + ((hands_position(0, "19", "x")) - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "19", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
         span_set('手背', "display", true);
         span_set('手背', "innerHTML", ('少衝' + '穴'));
         span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
     }
 
-    // 描述此函式... (原 _E5_B0_91_E6_BE_A4)
-    function drawAcupoint_ShaoZe() {
+    // 描述此函式...
+    function shangYang() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "6", "x")), (hands_position(0, "6", "y")), (hands_position(0, "7", "x")), (hands_position(0, "7", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + ((hands_position(0, "6", "x")) - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "6", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('商陽' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function yangXi() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "17", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('陽谿' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function zhongZhu() {
+        image_set('手背', "url", 'https://i.postimg.cc/4dpGy4Rj/costume1.png');
+        backSize = (hands_distance((hands_position(0, "17", "x")), (hands_position(0, "17", "y")), (hands_position(0, "13", "x")), (hands_position(0, "13", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + (((hands_position(0, "17", "x")) + (hands_position(0, "13", "x"))) / 2 - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "17", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
+        span_set('手背', "display", true);
+        span_set('手背', "innerHTML", ('中渚' + '穴'));
+        span_set('手背', "left", (image_get('手背', "left")));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
+    }
+
+    // 描述此函式...
+    function shaoZe() {
         image_set('手背', "url", 'https://i.postimg.cc/tCqxD0vK/costume3.png');
-        backOfHandSize = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "20", "x")), (hands_position(0, "20", "y"))));
-        image_set('手背', "height", backOfHandSize);
-        image_set('手背', "width", backOfHandSize);
-        image_set('手背', "left", (400 + ((hands_position(0, "20", "x")) - backOfHandSize / 2)));
-        image_set('手背', "top", ((hands_position(0, "20", "y")) - backOfHandSize / 2));
-        span_set('手背', "fontsize", backOfHandSize);
+        backSize = (hands_distance((hands_position(0, "19", "x")), (hands_position(0, "19", "y")), (hands_position(0, "20", "x")), (hands_position(0, "20", "y"))));
+        image_set('手背', "height", backSize);
+        image_set('手背', "width", backSize);
+        image_set('手背', "left", (400 + ((hands_position(0, "20", "x")) - backSize / 2)));
+        image_set('手背', "top", ((hands_position(0, "20", "y")) - backSize / 2));
+        span_set('手背', "fontsize", backSize);
         span_set('手背', "display", true);
         span_set('手背', "innerHTML", ('少澤' + '穴'));
         span_set('手背', "left", (image_get('手背', "left")));
-        span_set('手背', "top", ((image_get('手背', "top")) - (backOfHandSize + backOfHandSize / 2)));
+        span_set('手背', "top", ((image_get('手背', "top")) - (backSize + backSize / 2)));
     }
 
 
-    // --- 程式主要執行區塊 (保持原始順序) ---
-
-    initializeVariables(); // 呼叫 initializeVariables (原 _E8_AE_8A_E6_95_B8)
-    
-    spreadsheet_insert("insertlast", String('時間') + "|" + String('問題') + "|" + String('原文') + "|" + String('翻譯成繁體中文') + "|" + String('翻譯成英文'), 0, 0, "", spreadsheetURL, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
-    
-    // 使用解密後的 geminiApiKey
-    recording_GeminiSTT_initial(0, geminiApiKey, "gemini-2.5-flash", voicePrompt);
-    
+    initVariables();
+    spreadsheet_insert("insertlast", String('時間') + "|" + String('問題') + "|" + String('原文') + "|" + String('翻譯成繁體中文') + "|" + String('翻譯成英文'), 0, 0, "", spreadsheetUrl, '病症', "https://script.google.com/macros/s/AKfycbxA3hhTlntwVTOcqngOC_iJL_zLmRwzcDbMYDs7FD8iinNsY9XZsMkD7AcXTIUbEc33EA/exec");
+    recording_GeminiSTT_initial(0, geminiKey, "gemini-2.5-flash", speechPrompt);
     audioGeminiSTT = async function(geminiResult) {
         textarea_set('', "value", (geminiResult));
+
     };
-    
     head_add_viewport(1, 1, 2, "no");
     include_file("css", "", 'https://fustyles.github.io/webduino/GameElements_20190131/test_scroll.css');
     button_create('replay', 132, 35, 0, 0, 1, null, 'Reset Conversation', 12, 999, true);
@@ -480,14 +476,9 @@ const main = async () => {
     div_create('c', 195, 400, 0, 550, "solid", 1, '#000000', '#ffffff', '#000000', 10, 1, '', 999, true);
     div_create('e', 195, 400, 200, 550, "solid", 1, '#000000', '#ffffff', '#000000', 10, 1, '', 999, true);
     div_set('', "class", 'container');
-    
-    // 使用解密後的 geminiApiKey
-    gemini_chat_initial(geminiApiKey, "gemini-2.0-flash", 1000, 1.0, ([tcmPrompt, 'And you will translate your answer as follows', translationPrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', acupointDB, '並且記住你是一個有問必答的超級中醫'].join('')));
-    
+    gemini_chat_initial(geminiKey, "gemini-2.0-flash", 1000, 1.0, ([tcmPrompt, 'And you will translate your answer as follows', translatePrompt, '請不要只翻譯我所說的話，你還是需要回答我的問題', '你回答的問題題中一定要有以下穴位', acupointDb, '並且記住你是一個有問必答的超級中醫'].join('')));
     await delay(2);
-    
-    setupEventListeners(); // 呼叫 setupEventListeners (原 _E8_BE_A8_E8_AD_98)
-    
+    recognition();
     select_create('手背', 300, 50, 885, 560, '#ffffff', '#000000', 20, 1, [
         ['陽池', '陽池穴'],
         ['少澤', '少澤穴'],
@@ -520,61 +511,59 @@ const main = async () => {
     span_set('手掌', "display", false);
     span_set('手背', "display", false);
     hands_video("block", "1", "1", "1");
-    hands_startvideo_media(videoWidth, 400, "front", 0);
+    hands_startvideo_media(width, 400, "front", 0);
     hands_video_position(400, 0);
     image_create('手掌', 'https://i.postimg.cc/4dpGy4Rj/costume1.png', 10, 10, 0, 0, 1000, false);
     image_create('手背', 'https://i.postimg.cc/4dpGy4Rj/costume1.png', 10, 10, 0, 0, 1000, false);
-    image_create('手掌圖示', 'https://i.postimg.cc/zGGD8dk8/page-0001.png', videoWidth, 400, 400, 0, 999, true);
-    
-    // 保持 hands_recognitionFinish 的原始定義位置和結構
+    image_create('手掌圖示', 'https://i.postimg.cc/zGGD8dk8/page-0001.png', width, 400, 400, 0, 999, true);
     hands_recognitionFinish = async function() {
         hands_state(0);
-        async function gameselect_手背_onchange(event) {
-            currentPalmAcupoint = '';
+        async function gameselect_back_onchange(event) {
+            palm = '';
         };
-        document.getElementById("gameselect_手背").addEventListener("change", gameselect_手背_onchange, true);
-        async function gameselect_手掌_onchange(event) {
-            currentPalmAcupoint = '';
+        document.getElementById("gameselect_手背").addEventListener("change", gameselect_back_onchange, true);
+        async function gameselect_palm_onchange(event) {
+            palm = '';
         };
-        document.getElementById("gameselect_手掌").addEventListener("change", gameselect_手掌_onchange, true);
-        if ((videoWidth + 400) - (hands_position(0, "1", "x")) <= (videoWidth + 400) - (hands_position(0, "17", "x"))) {
+        document.getElementById("gameselect_手掌").addEventListener("change", gameselect_palm_onchange, true);
+        if ((width + 400) - (hands_position(0, "1", "x")) <= (width + 400) - (hands_position(0, "17", "x"))) {
             image_set('手掌圖示', "url", 'https://i.postimg.cc/zGGD8dk8/page-0001.png');
-            if ((select_get('手掌', "selectedValue")) == '無' && !currentPalmAcupoint.length) {
+            if ((select_get('手掌', "selectedValue")) == '無' && !palm.length) {
                 image_set('手掌', "display", false);
                 span_set('手掌', "display", false);
-            } else if ((select_get('手掌', "selectedValue")) == '魚際' || (currentPalmAcupoint.toLowerCase().indexOf('魚際'.toLowerCase()) != -1)) {
+            } else if ((select_get('手掌', "selectedValue")) == '魚際' || (palm.toLowerCase().indexOf('魚際'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_YuJi();
-            } else if ((select_get('手掌', "selectedValue")) == '內關' || (currentPalmAcupoint.toLowerCase().indexOf('內關'.toLowerCase()) != -1)) {
+                yuJi();
+            } else if ((select_get('手掌', "selectedValue")) == '內關' || (palm.toLowerCase().indexOf('內關'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_NeiGuan();
-            } else if ((select_get('手掌', "selectedValue")) == '太淵' || (currentPalmAcupoint.toLowerCase().indexOf('太淵'.toLowerCase()) != -1)) {
+                neiGuan();
+            } else if ((select_get('手掌', "selectedValue")) == '太淵' || (palm.toLowerCase().indexOf('太淵'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_TaiYuan();
-            } else if ((select_get('手掌', "selectedValue")) == '中衝' || (currentPalmAcupoint.toLowerCase().indexOf('中衝'.toLowerCase()) != -1)) {
+                taiYuan();
+            } else if ((select_get('手掌', "selectedValue")) == '中衝' || (palm.toLowerCase().indexOf('中衝'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_ZhongChong();
-            } else if ((select_get('手掌', "selectedValue")) == '列缺' || (currentPalmAcupoint.toLowerCase().indexOf('列缺'.toLowerCase()) != -1)) {
+                zhongChong();
+            } else if ((select_get('手掌', "selectedValue")) == '列缺' || (palm.toLowerCase().indexOf('列缺'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_LieQue();
-            } else if ((select_get('手掌', "selectedValue")) == '前谷' || (currentPalmAcupoint.toLowerCase().indexOf('前谷'.toLowerCase()) != -1)) {
+                lieQue();
+            } else if ((select_get('手掌', "selectedValue")) == '前谷' || (palm.toLowerCase().indexOf('前谷'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_QianGu();
-            } else if ((select_get('手掌', "selectedValue")) == '神門' || (currentPalmAcupoint.toLowerCase().indexOf('神門'.toLowerCase()) != -1)) {
+                qianGu();
+            } else if ((select_get('手掌', "selectedValue")) == '神門' || (palm.toLowerCase().indexOf('神門'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_ShenMen();
-            } else if ((select_get('手掌', "selectedValue")) == '三間' || (currentPalmAcupoint.toLowerCase().indexOf('三間'.toLowerCase()) != -1)) {
+                shenMen();
+            } else if ((select_get('手掌', "selectedValue")) == '三間' || (palm.toLowerCase().indexOf('三間'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_SanJian();
-            } else if ((select_get('手掌', "selectedValue")) == '勞宮' || (currentPalmAcupoint.toLowerCase().indexOf('勞宮'.toLowerCase()) != -1)) {
+                sanJian();
+            } else if ((select_get('手掌', "selectedValue")) == '勞宮' || (palm.toLowerCase().indexOf('勞宮'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_LaoGong();
-            } else if ((select_get('手掌', "selectedValue")) == '后溪' || (currentPalmAcupoint.toLowerCase().indexOf('后溪'.toLowerCase()) != -1)) {
+                laoGong();
+            } else if ((select_get('手掌', "selectedValue")) == '后溪' || (palm.toLowerCase().indexOf('后溪'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_HouXi();
-            } else if ((select_get('手掌', "selectedValue")) == '二間' || (currentPalmAcupoint.toLowerCase().indexOf('二間'.toLowerCase()) != -1)) {
+                houXi();
+            } else if ((select_get('手掌', "selectedValue")) == '二間' || (palm.toLowerCase().indexOf('二間'.toLowerCase()) != -1)) {
                 image_set('手掌', "display", true);
-                drawAcupoint_ErJian();
+                erJian();
             } else {
                 image_set('手掌', "display", false);
                 span_set('手掌', "display", false);
@@ -583,35 +572,35 @@ const main = async () => {
             image_set('手掌', "display", false);
             span_set('手掌', "display", false);
         }
-        if (videoWidth - (hands_position(0, "1", "x")) >= videoWidth - (hands_position(0, "17", "x"))) {
+        if (width - (hands_position(0, "1", "x")) >= width - (hands_position(0, "17", "x"))) {
             image_set('手掌圖示', "url", 'https://i.postimg.cc/V6SCgMtj/20240325154306761-page-0001.png');
-            if ((select_get('手背', "selectedValue")) == '無' && !currentPalmAcupoint.length) {
+            if ((select_get('手背', "selectedValue")) == '無' && !palm.length) {
                 image_set('手背', "display", false);
                 span_set('手背', "display", false);
-            } else if ((select_get('手背', "selectedValue")) == '落枕' || (currentPalmAcupoint.toLowerCase().indexOf('落枕'.toLowerCase()) != -1)) {
+            } else if ((select_get('手背', "selectedValue")) == '落枕' || (palm.toLowerCase().indexOf('落枕'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_LuoZhen();
-            } else if ((select_get('手背', "selectedValue")) == '合谷' || (currentPalmAcupoint.toLowerCase().indexOf('合谷'.toLowerCase()) != -1)) {
+                luoZhen();
+            } else if ((select_get('手背', "selectedValue")) == '合谷' || (palm.toLowerCase().indexOf('合谷'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_HeGu();
-            } else if ((select_get('手背', "selectedValue")) == '少衝' || (currentPalmAcupoint.toLowerCase().indexOf('少衝'.toLowerCase()) != -1)) {
+                heGu();
+            } else if ((select_get('手背', "selectedValue")) == '少衝' || (palm.toLowerCase().indexOf('少衝'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_ShaoChong();
-            } else if ((select_get('手背', "selectedValue")) == '商陽' || (currentPalmAcupoint.toLowerCase().indexOf('商陽'.toLowerCase()) != -1)) {
+                shaoChong();
+            } else if ((select_get('手背', "selectedValue")) == '商陽' || (palm.toLowerCase().indexOf('商陽'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_ShangYang();
-            } else if ((select_get('手背', "selectedValue")) == '中渚' || (currentPalmAcupoint.toLowerCase().indexOf('中渚'.toLowerCase()) != -1)) {
+                shangYang();
+            } else if ((select_get('手背', "selectedValue")) == '中渚' || (palm.toLowerCase().indexOf('中渚'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_ZhongZhu();
-            } else if ((select_get('手背', "selectedValue")) == '陽池' || (currentPalmAcupoint.toLowerCase().indexOf('陽池'.toLowerCase()) != -1)) {
+                zhongZhu();
+            } else if ((select_get('手背', "selectedValue")) == '陽池' || (palm.toLowerCase().indexOf('陽池'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_YangChi();
-            } else if ((select_get('手背', "selectedValue")) == '少澤' || (currentPalmAcupoint.toLowerCase().indexOf('少澤'.toLowerCase()) != -1)) {
+                yangChi();
+            } else if ((select_get('手背', "selectedValue")) == '少澤' || (palm.toLowerCase().indexOf('少澤'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_ShaoZe();
-            } else if ((select_get('手背', "selectedValue")) == '陽谿' || (currentPalmAcupoint.toLowerCase().indexOf('陽谿'.toLowerCase()) != -1)) {
+                shaoZe();
+            } else if ((select_get('手背', "selectedValue")) == '陽谿' || (palm.toLowerCase().indexOf('陽谿'.toLowerCase()) != -1)) {
                 image_set('手背', "display", true);
-                drawAcupoint_YangXi();
+                yangXi();
             } else {
                 image_set('手背', "display", false);
                 span_set('手背', "display", false);
@@ -623,8 +612,6 @@ const main = async () => {
 
         hands_state(1);
     };
-    
-    // 保持 hands_unrecognitionFinish 的原始定義位置和結構
     hands_unrecognitionFinish = async function() {
         hands_state(0);
         image_set('手背', "display", false);
@@ -637,4 +624,5 @@ const main = async () => {
 };
 main();
 </script>
-</body></html>
+</body>
+</html>
